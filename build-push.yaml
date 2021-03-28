@@ -1,0 +1,21 @@
+---
+  - name: playbook to run and build docker
+    hosts: ansible_controller
+    become: true
+    gather_facts: false
+    tasks:
+      - name: delete existing docker images from the control plane
+        shell: docker rmi $(docker images -q) -f
+        ignore_errors: yes
+      - name: push Docker image to registry
+        docker_image:
+          name: java-jar-image
+          build: 
+            path: /opt/docker
+            pull: true
+          state: present
+          tag: "latest"
+          force_tag: yes
+          repository: nitesh99sharma/java-jar-image
+          push: yes
+          source: build

@@ -1,0 +1,17 @@
+---
+  - import_playbook: build-push.yaml
+
+  - name: Playbook to build and run docker
+    hosts: docker_host
+    become: true
+    gather_facts: false
+    tasks:
+      - name: run a docker container using java-jar-image
+        docker_container:
+          name: java-jar-container
+          image: nitesh99sharma/java-jar-image:latest
+          state: started
+          recreate: yes
+          detach: true
+          ports:
+            - "8888:8080"
